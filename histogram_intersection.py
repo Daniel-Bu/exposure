@@ -3,7 +3,7 @@ import cv2
 import sys
 import os
 import random
-from util import read_set
+from .util import read_set
 
 HIST_BINS = 32
 

@@ -4,9 +4,9 @@ import pickle as pickle
 import cv2
 import random
 import time
-from data_provider import DataProvider
+from .data_provider import DataProvider
 import multiprocessing.dummy
-from util import read_tiff16, read_set
+from .util import read_tiff16, read_set
 
 LIMIT = 5000000
 image_size = 80
@@ -37,7 +37,7 @@ def preprocess_RAW_aug():
 
   p = multiprocessing.dummy.Pool(16)
 
-  from util import rotate_and_crop, linearize_ProPhotoRGB
+  from .util import rotate_and_crop, linearize_ProPhotoRGB
 
   def load(i):
     fn = files[i]

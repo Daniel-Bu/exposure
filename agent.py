@@ -1,11 +1,11 @@
 import tensorflow as tf
 import tensorflow.contrib.layers as ly
-from util import lrelu
+from .util import lrelu
 import cv2
 import math
-from pdf_sample_layer import pdf_sample
-from util import enrich_image_input
-from util import STATE_DROPOUT_BEGIN, STATE_REWARD_DIM, STATE_STEP_DIM, STATE_STOPPED_DIM
+from .pdf_sample_layer import pdf_sample
+from .util import enrich_image_input
+from .util import STATE_DROPOUT_BEGIN, STATE_REWARD_DIM, STATE_STEP_DIM, STATE_STOPPED_DIM
 
 
 def feature_extractor(net, output_dim, cfg):

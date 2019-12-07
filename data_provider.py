@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import cv2
-from util import rotate_and_crop, AsyncTaskManager
+from .util import rotate_and_crop, AsyncTaskManager
 
 
 class DataProvider(object):

@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import tensorflow.contrib.layers as ly
-from util import lrelu, rgb2lum, tanh_range, lerp
+from .util import lrelu, rgb2lum, tanh_range, lerp
 import cv2
 import math
 

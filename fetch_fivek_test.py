@@ -1,6 +1,6 @@
 import sys
 import os
-from util import read_set
+from .util import read_set
 import shutil
 
 five_k_dataset_path = 'data/fivek_dataset/'

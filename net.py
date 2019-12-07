@@ -1,4 +1,4 @@
-from util import STATE_DROPOUT_BEGIN, STATE_REWARD_DIM, STATE_STEP_DIM, STATE_STOPPED_DIM
+from .util import STATE_DROPOUT_BEGIN, STATE_REWARD_DIM, STATE_STEP_DIM, STATE_STOPPED_DIM
 import pickle as pickle
 import os
 import shutil
@@ -7,8 +7,8 @@ import cv2
 import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as ly
-from replay_memory import ReplayMemory
-from util import make_image_grid, Tee, merge_dict, Dict
+from .replay_memory import ReplayMemory
+from .util import make_image_grid, Tee, merge_dict, Dict
 
 device = '/gpu:0'
 
@@ -713,8 +713,9 @@ class GAN:
            output_dir='./outputs',
            step_by_step=False,
            show_linear=True,
-           show_input=True):
-    from util import get_image_center
+           show_input=True,
+           show_debug=True):
+    from .util import get_image_center
     if output_dir is not None:
       try:
         os.mkdir(output_dir)
@@ -727,7 +728,7 @@ class GAN:
     for fn in spec_files:
       print('Processing input {}'.format(fn))
 
-      from util import read_tiff16, linearize_ProPhotoRGB
+      from .util import read_tiff16, linearize_ProPhotoRGB
       if fn.endswith('.tif') or fn.endswith('.tiff'):
         image = read_tiff16(fn)
         high_res_image = linearize_ProPhotoRGB(image)
@@ -839,39 +840,40 @@ class GAN:
       show_and_save('retouched', high_res_output)
 
       # Steps & debugging information
-      with open(os.path.join(get_dir(), fn + '_debug.pkl'), 'wb') as f:
-        pickle.dump(debug_info_list, f)
+      if show_debug:
+        with open(os.path.join(get_dir(), fn + '_debug.pkl'), 'wb') as f:
+          pickle.dump(debug_info_list, f)
 
-      padding = 4
-      patch = 64
-      grid = patch + padding
-      steps = len(low_res_img_trajs)
+        padding = 4
+        patch = 64
+        grid = patch + padding
+        steps = len(low_res_img_trajs)
 
-      fused = np.ones(shape=(grid * 4, grid * steps, 3), dtype=np.float32)
+        fused = np.ones(shape=(grid * 4, grid * steps, 3), dtype=np.float32)
 
-      for i in range(len(low_res_img_trajs)):
-        sx = grid * i
-        sy = 0
-        fused[sy:sy + patch, sx:sx + patch] = cv2.resize(
-            low_res_img_trajs[i],
-            dsize=(patch, patch),
-            interpolation=cv2.cv2.INTER_NEAREST)
+        for i in range(len(low_res_img_trajs)):
+          sx = grid * i
+          sy = 0
+          fused[sy:sy + patch, sx:sx + patch] = cv2.resize(
+              low_res_img_trajs[i],
+              dsize=(patch, patch),
+              interpolation=cv2.cv2.INTER_NEAREST)
 
-      for i in range(len(low_res_img_trajs) - 1):
-        sx = grid * i + grid // 2
-        sy = grid
-        fused[sy:sy + patch, sx:sx + patch] = cv2.resize(
-            decisions[i],
-            dsize=(patch, patch),
-            interpolation=cv2.cv2.INTER_NEAREST)
-        sy = grid * 2 - padding // 2
-        fused[sy:sy + patch, sx:sx + patch] = cv2.resize(
-            operations[i],
-            dsize=(patch, patch),
-            interpolation=cv2.cv2.INTER_NEAREST)
-        sy = grid * 3 - padding
-        fused[sy:sy + patch, sx:sx + patch] = cv2.resize(
-            masks[i], dsize=(patch, patch), interpolation=cv2.cv2.INTER_NEAREST)
+        for i in range(len(low_res_img_trajs) - 1):
+          sx = grid * i + grid // 2
+          sy = grid
+          fused[sy:sy + patch, sx:sx + patch] = cv2.resize(
+              decisions[i],
+              dsize=(patch, patch),
+              interpolation=cv2.cv2.INTER_NEAREST)
+          sy = grid * 2 - padding // 2
+          fused[sy:sy + patch, sx:sx + patch] = cv2.resize(
+              operations[i],
+              dsize=(patch, patch),
+              interpolation=cv2.cv2.INTER_NEAREST)
+          sy = grid * 3 - padding
+          fused[sy:sy + patch, sx:sx + patch] = cv2.resize(
+              masks[i], dsize=(patch, patch), interpolation=cv2.cv2.INTER_NEAREST)
 
-      # Save steps
-      show_and_save('steps', fused)
+        # Save steps
+        show_and_save('steps', fused)

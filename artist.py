@@ -2,8 +2,8 @@ import numpy as np
 import os
 import cv2
 import random
-from util import get_image_center
-from data_provider import DataProvider
+from .util import get_image_center
+from .data_provider import DataProvider
 
 LIMIT = 10000
 SOURCE_DIR = 'data/artists/'

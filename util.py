@@ -325,7 +325,7 @@ def read_tiff16(fn):
 
 def load_config(config_name):
   scope = {}
-  exec ('from config_%s import cfg' % config_name, scope)
+  exec ('from exposure.config_%s import cfg' % config_name, scope)
   return scope['cfg']
 
 

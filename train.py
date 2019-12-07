@@ -1,6 +1,6 @@
 import sys
 import os
-from util import load_config
+from .util import load_config
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from net import GAN
